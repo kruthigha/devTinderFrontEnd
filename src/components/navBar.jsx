@@ -1,12 +1,29 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate , Link } from "react-router-dom"
+import { removeUser } from  "../utils/userSlice"
+import axios from "axios"
+import {BASE_URL} from "../utils/constants"
+
 function NavBar() {
   const user = useSelector(store => store.user)
   console.log("Reading Subscribing via redux store", user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handleLogout = async() =>{
+    try {
+      const res = await axios.post(BASE_URL+"/logout",{},{ withCredentials : true})
+      console.log("logging out",res)
+      dispatch(removeUser())
+      return navigate("/login") 
+    } catch(err){
+      console.log("Error Handle Logout: "+err)
+    }
+  }
   return (
     <>
       <div className="navbar bg-base-300">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">DevTinder</a>
+          <Link to="/feed" className="btn btn-ghost text-xl">DevTinder</Link>
         </div>
         <div className="flex-none gap-2">
         { user && <><div className="form-control">
@@ -30,13 +47,13 @@ function NavBar() {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <a className="justify-between">
+                <Link to="/profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a>Logout</a>
+                <a onClick={handleLogout}>Logout</a>
               </li>
             </ul>
           </div>

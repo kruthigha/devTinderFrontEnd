@@ -9,6 +9,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [err,setErr] = useState("")
   const dispatch = useDispatch()
   const navigate = useNavigate();
   let messageflag = false
@@ -36,19 +37,12 @@ const Login = () => {
           emailId: userInput.email,
           password: userInput.password
         },{withCredentials : true})
-        .then(function (response) {
-          console.log("res="+JSON.stringify(response));
-          return response
-        })
-        .catch(function (error) {
-          console.log("err="+error);
-          return error
-        });
-        dispatch(addUser(res.data))
+         dispatch(addUser(res.data))
          console.log("Generate_result:",JSON.stringify(res))
-         return navigate('/feed')
+         if(res){return navigate('/feed')}
         } catch(err) {
-            console.log("error:"+ err)
+            console.log("Login error:"+ err.data)
+            setErr(err.message)
         }
     } else {
         messageflag = true
@@ -64,13 +58,17 @@ const Login = () => {
           <input onChange={handleMail} value={userInput.email} />
           <label>Password</label>
           <input onChange={handlePassword} value={userInput.password} />
+          {err && <p className="text-red-500  mx-auto flex justify-centre my-4">{"Invalid credentials"}</p>}
           <div className="card-actions mx-auto flex justify-centre my-4">
-            <button className="btn btn-primary border-r-8" onClick={checkLogin}>
+            
+            <button className="btn btn-primary border-r-8 flex-coloumn" onClick={checkLogin}>
             Login
             </button>
             
+            
 
           </div>
+         
         </div>
       </div>
     </>
