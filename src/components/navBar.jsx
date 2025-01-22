@@ -7,6 +7,7 @@ import {BASE_URL} from "../utils/constants"
 function NavBar() {
   const user = useSelector(store => store.user)
   console.log("Reading Subscribing via redux store", user)
+  
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleLogout = async() =>{
@@ -50,6 +51,11 @@ function NavBar() {
                 <Link to="/profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/connections" className="justify-between">
+                  Connections
                 </Link>
               </li>
               <li>
