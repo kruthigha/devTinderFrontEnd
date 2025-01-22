@@ -7,7 +7,7 @@ import  UserCard  from "./userCard"
 
 const Feed = () => {
   const [feed, setFeed] = useState([]);  // Initialize as an empty array
-  const userFeed = useSelector((store)=> store.feed)
+  const usersFeed = useSelector((store)=> store.feed)
   const dispatch = useDispatch()
 
   async function fetchFeed() {
@@ -22,6 +22,16 @@ const Feed = () => {
       console.error("Error fetching feed:", error);
     }
   }
+  async function handleRequestStatus(status, id){
+    try{
+    const res = await axios.post(BASE_URL + "/request/send/"+status+"/"+id, {}, {withCredentials:  true})
+    console.log("handleRequestStatus",res)
+    console.log("Person id clicked=", id )
+    dispatch(removeFeed(id)) 
+    } catch(err){
+      console.log("handleRequestsErr:", err)
+    }
+  }
 
   useEffect(() => {
     fetchFeed();
@@ -29,21 +39,13 @@ const Feed = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Here's your Feed: {feed?.data?.message || ""}</h1>
+      <h1 className="text-3xl font-bold"> Here's your Feed: {feed?.data?.message || ""}</h1>
       {feed.length === 0 ? (
         <div>Loading...</div>
       ) : (
-        <Card  feedData={feed}/>
-      )}
-    </>
-  );
-};
-
-const Card = ({ feedData }) => {
-  return (
-    <>
-      {feedData && feedData.length > 0 ? (
-        feedData.map((person, index) => (
+        <>
+      {usersFeed && usersFeed.length > 0 ? (
+        usersFeed.map((person, index) => (
           <div key={index} className="card card-side bg-base-100 shadow-xl flex justify-center p-4 m-4">
             <figure>
               <img src={person.photoUrl} alt="people in feed" />
@@ -55,17 +57,53 @@ const Card = ({ feedData }) => {
               <p>Gender: {person.gender ? person.gender : "Not Mentioned" }</p>
               <p>Age: {person.age ? person.age : "Not Mentioned"  }</p>
               <div className="card-actions justify-end">
-                <button className="btn btn-primary">Interested</button>
-                <button className="btn">Ignore</button>
+              {console.log("id=", person._id )}
+                <button className="btn btn-primary" onClick={()=> handleRequestStatus("interested",person._id)}>Interested</button>
+                <button className="btn" onClick={()=> handleRequestStatus("ignored", person._id)}>Ignore</button>
               </div>
             </div>
           </div>
         ))
       ) : (
-        <div>No data available</div>
+        <div>Feed is not available</div>
+      )}
+    </>
       )}
     </>
   );
 };
+
+// const Card = ({ feedData }) => {
+
+
+ 
+//   return (
+//     <>
+//       {feedData && feedData.length > 0 ? (
+//         feedData.map((person, index) => (
+//           <div key={index} className="card card-side bg-base-100 shadow-xl flex justify-center p-4 m-4">
+//             <figure>
+//               <img src={person.photoUrl} alt="people in feed" />
+//             </figure>
+//             <div className="card-body">
+//               <h2 className="card-title">
+//                 Name: {person.firstName} {person.lastName}
+//               </h2>
+//               <p>Gender: {person.gender ? person.gender : "Not Mentioned" }</p>
+//               <p>Age: {person.age ? person.age : "Not Mentioned"  }</p>
+//               <div className="card-actions justify-end">
+//               {console.log("id=", person._id )}
+//                 <button className="btn btn-primary" onClick={()=> handleRequestStatus("interested",person._id)}>Interested</button>
+//                 <button className="btn" onClick={()=> handleRequestStatus("ignored", person._id)}>Ignore</button>
+//               </div>
+//             </div>
+//           </div>
+//         ))
+//       ) : (
+//         <div>Feed is not available</div>
+//       )}
+//     </>
+//   );
+// };
 
 export default Feed;

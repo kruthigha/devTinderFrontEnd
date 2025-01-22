@@ -50,6 +50,9 @@ const Profile = () => {
         dispatch(addUser(response.data))
         setShowToast(true)
         console.log("Saved Profile successfully!")
+        setTimeout(()=>{
+          setShowToast(false)
+        },5000)
       }
       } catch (err) {
       console.error("Error updating profile:", err.response?.data || err);

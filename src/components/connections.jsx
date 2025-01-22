@@ -3,7 +3,8 @@ import { useEffect, useState } from "react"
 import { BASE_URL } from "../utils/constants"
 
 const Connections = ()=>{
-    const [feedData , setFeedData] = useState([])
+    const [feedData, setFeedData] = useState([])
+
     const fetchConnections = (async()=>{
         try{
          const res = await axios.get(BASE_URL+"/user/connection", {
@@ -19,14 +20,15 @@ const Connections = ()=>{
     useEffect(() => {
         fetchConnections()
     },[])
+
     return(<>
      <h1 className="text-3xl font-bold">Xplore your Connections</h1>
      {feedData && feedData.length > 0 ? (
           feedData.map((person, index) => (
             <div key={index} className="card card-side bg-base-100 shadow-xl flex justify-center p-4 m-4">
-              <figure>
-                <img  className="rounded-full" src={person.photoUrl} alt="people in feed" />
-              </figure>
+            <figure>
+            <img src={person.photoUrl} alt="Profile Pic"/>
+            </figure>
               <div className="card-body">
                 <h2 className="card-title">
                   Name: {person.firstName} {person.lastName}
@@ -37,10 +39,10 @@ const Connections = ()=>{
             </div>
           ))
         ) : (
-          <div>No data available</div>
+          <div>No Connections available</div>
         )}
       </>
     );
-  };
+};
 
- export default Connections
+export default Connections
