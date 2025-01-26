@@ -76,7 +76,7 @@ const Login = () => {
       console.log("Login Button clicked", userInput);
       try {
         const res = await axios.post(
-          "http://localhost:7777/login",
+          BASE_URL+"/login",
           {
             emailId: userInput.email,
             password: userInput.password,
@@ -140,4 +140,5 @@ const Login = () => {
     </>
   );
 };
+
 export default Login;
